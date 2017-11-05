@@ -22,7 +22,7 @@ app.set('views', __dirname + '/views');
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Body parser middleware
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 
@@ -46,6 +46,33 @@ app.get('/', function(req, res){
      
 });
 
+app.post('/add', function(req, res){
+    const text = 'INSERT INTO recipes(name, ingredients, directions) VALUES($1, $2, $3)';
+    const values = [req.body.name, req.body.ingredients, req.body.directions];
+   
+    const client = new Client({
+        connectionString: connect,
+      })
+      client.connect();
+    
+            
+    // callback
+    client.query(text, values, (err, ressult) => {
+        if (err) {
+        console.log(err.stack)
+        } else {
+            console.log('jere')
+            client.end();
+            res.redirect('/');
+        }
+    })
+     
+      
+    
+          
+        
+        
+})
 
 
 //Server
